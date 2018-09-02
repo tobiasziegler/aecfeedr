@@ -1,0 +1,16 @@
+Package: aecfeedr
+Title: Retrieve Australian Federal Election Information and Results
+Version: 0.0.0.9000
+Authors@R: person("David", "Mallard",
+               email = "correspondence@davidmallard.id.au",
+               role = c("aut", "cre"))
+Description: Access and read data from the Australian Electoral Commission's
+    FTP media feeds.
+Depends: R (>= 3.5)
+License: MIT + file LICENSE
+URL: https://github.com/tobiasziegler/aecfeedr
+BugReports: https://github.com/tobiasziegler/aecfeedr/issues
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0
+Roxygen: list(markdown = TRUE)
