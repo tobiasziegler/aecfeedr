@@ -16,4 +16,9 @@ RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
 Imports:
     curl,
-    magrittr
+    dplyr,
+    magrittr,
+    purrr,
+    tibble,
+    tidyr,
+    xml2
