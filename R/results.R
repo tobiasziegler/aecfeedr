@@ -25,6 +25,28 @@ read_results_house_fp_by_pollingplace <- function(x) {
       ))
   )
 
+  # Unpack the polling place XML for each contest into tibbles
+  results <-
+    results %>%
+    dplyr::mutate(
+      pollingplaces = pp_xml %>%
+        purrr::map(~ tibble::tibble(
+          pollingplace_id = .x %>%
+            xml2::xml_find_first(".//d1:PollingPlaceIdentifier") %>%
+            xml2::xml_attr("Id"),
+          fp_xml = .x %>%
+            purrr::map(~ xml2::xml_find_all(
+              .,
+              "./d1:FirstPreferences"
+            ))
+        ))
+    )
+
+  # Remove the polling place XML nodesets now that they've been unpacked
+  results <-
+    results %>%
+    dplyr::select(-pp_xml)
+
   # Return the tibble containing the results
   results
 }
