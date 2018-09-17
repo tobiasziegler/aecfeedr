@@ -25,17 +25,11 @@ get_directory_url <- function(id, granularity, verbosity, archived = FALSE) {
 #'
 #' Description goes here
 #'
-#' @param id The unique numeric ID of the electoral event
-#' @param granularity Standard or Detailed granularity
-#' @param verbosity Eml, Light, LightProgress, Preload or Verbose
-#' @param archived FALSE for a live election feed, TRUE for a past election
+#' @param url A string containing the URL of the directory
 #'
 #' @return The contents of the directory
 #' @export
-list_files <- function(id, granularity, verbosity, archived = FALSE) {
-  # Get the URL for the directory
-  url <- get_directory_url(id, granularity, verbosity, archived)
-
+list_files <- function(url) {
   # Set up the handle to configure the curl request
   handle <- curl::new_handle()
   curl::handle_setopt(handle = handle, dirlistonly = TRUE)

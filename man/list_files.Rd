@@ -4,16 +4,10 @@
 \alias{list_files}
 \title{List all files in an AEC feed directory}
 \usage{
-list_files(id, granularity, verbosity, archived = FALSE)
+list_files(url)
 }
 \arguments{
-\item{id}{The unique numeric ID of the electoral event}
-
-\item{granularity}{Standard or Detailed granularity}
-
-\item{verbosity}{Eml, Light, LightProgress, Preload or Verbose}
-
-\item{archived}{FALSE for a live election feed, TRUE for a past election}
+\item{url}{A string containing the URL of the directory}
 }
 \value{
 The contents of the directory
