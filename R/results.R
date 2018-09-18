@@ -47,6 +47,11 @@ read_results_house_fp_by_pollingplace <- function(x) {
     results %>%
     dplyr::select(-pp_xml)
 
+  # Unnest the data so each row contains results for one polling place
+  results <-
+    results %>%
+    tidyr::unnest()
+
   # Return the tibble containing the results
   results
 }
