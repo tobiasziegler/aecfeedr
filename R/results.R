@@ -74,6 +74,11 @@ read_results_house_fp_by_pollingplace <- function(x) {
     results %>%
     dplyr::select(-fp_xml)
 
+  # Unnest the data so each row contains one first preference count
+  results <-
+    results %>%
+    tidyr::unnest()
+
   # Return the tibble containing the results
   results
 }
