@@ -37,7 +37,7 @@ read_results_house_fp_by_pollingplace <- function(x) {
           fp_xml = .x %>%
             purrr::map(~ xml2::xml_find_all(
               .,
-              "./d1:FirstPreferences"
+              "./d1:FirstPreferences/*"
             ))
         ))
     )
