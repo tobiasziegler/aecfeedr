@@ -52,6 +52,28 @@ read_results_house_fp_by_pollingplace <- function(x) {
     results %>%
     tidyr::unnest()
 
+  # Unpack the first preferences XML for each polling place into tibbles
+  results <-
+    results %>%
+    dplyr::mutate(
+      firstpreferences = fp_xml %>%
+        purrr::map(~ tibble::tibble(
+          vote_type = .x %>%
+            xml2::xml_name(),
+          candidate_id = .x %>%
+            xml2::xml_find_first("./eml:CandidateIdentifier") %>%
+            xml2::xml_attr("Id"),
+          votes = .x %>%
+            xml2::xml_find_first("./d1:Votes") %>%
+            xml2::xml_text()
+        ))
+    )
+
+  # Remove the first preferences XML nodesets now that they've been unpacked
+  results <-
+    results %>%
+    dplyr::select(-fp_xml)
+
   # Return the tibble containing the results
   results
 }
