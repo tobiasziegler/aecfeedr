@@ -19,6 +19,7 @@ Imports:
     dplyr,
     magrittr,
     purrr,
+    readr,
     tibble,
     tidyr,
     xml2
