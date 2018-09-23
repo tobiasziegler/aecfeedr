@@ -79,6 +79,19 @@ read_results_house_fp_by_pollingplace <- function(x) {
     results %>%
     tidyr::unnest()
 
+  # Convert the data to appropriate types
+  results <-
+    results %>%
+    readr::type_convert(
+      col_types = readr::cols(
+        contest_id = readr::col_integer(),
+        pollingplace_id = readr::col_integer(),
+        vote_type = readr::col_character(),
+        candidate_id = readr::col_integer(),
+        votes = readr::col_integer()
+      )
+    )
+
   # Return the tibble containing the results
   results
 }
