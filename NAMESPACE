@@ -3,5 +3,6 @@
 export("%>%")
 export(get_directory_url)
 export(list_files)
+export(read_results_detailed_preload_house)
 export(read_results_house_fp_by_pollingplace)
 importFrom(magrittr,"%>%")

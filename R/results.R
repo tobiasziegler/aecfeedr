@@ -104,3 +104,45 @@ read_results_house_fp_by_pollingplace <- function(x) {
   # Return the tibble containing the results
   results
 }
+
+#' Read the House information from the Detailed Preload Results XML message
+#'
+#' Description goes here
+#'
+#' @param x A string, connection or raw vector to be processed by `read_xml`
+#'
+#' @return A list of tibbles containing static and historical information
+#' @export
+read_results_detailed_preload_house <- function(x) {
+  # Read the XML document
+  xml <- xml2::read_xml(x)
+
+  # Cache the extracted namespaces for use in XPath searches
+  ns <- xml2::xml_ns(xml)
+
+  # Start by finding the nodeset containing each House contest in the document
+  contests_xml <- xml2::xml_find_all(
+    xml,
+    "/d1:MediaFeed/d1:Results/d1:Election/d1:House/d1:Contests/d1:Contest",
+    ns = ns
+  )
+
+  # Create a tibble containing the contest (division) data
+  contests <-
+    tibble::tibble(
+      contest_id = contests_xml %>%
+        xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
+        xml2::xml_attr("Id"),
+      contest_name = contests_xml %>%
+        xml2::xml_find_first(
+          "./eml:ContestIdentifier/eml:ContestName",
+          ns = ns
+        ) %>%
+        xml2::xml_text()
+    )
+
+  # Create a list to store and return all tibbles created from the XML
+  output <- list(contests = contests)
+
+  output
+}
