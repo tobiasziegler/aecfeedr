@@ -180,8 +180,51 @@ read_results_detailed_preload_house <- function(x) {
     pollingplaces %>%
     tidyr::unnest()
 
+  # Create a tibble containing the candidate data
+  candidates <-
+    tibble::tibble(
+      contest_id = contests_xml %>%
+        xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
+        xml2::xml_attr("Id"),
+      candidates_xml = contests_xml %>%
+        purrr::map(~ xml2::xml_find_all(., "./d1:FirstPreferences/*", ns = ns))
+    )
+
+  # Unpack the candidate XML for each contest into tibbles
+  candidates <-
+    candidates %>%
+    dplyr::mutate(
+      candidates_tbl = candidates_xml %>%
+        purrr::map(~ tibble::tibble(
+          candidate_id = .x %>%
+            xml2::xml_find_first("./eml:CandidateIdentifier", ns = ns) %>%
+            xml2::xml_attr("Id"),
+          candidate_name = .x %>%
+            xml2::xml_find_first(
+              "./eml:CandidateIdentifier/eml:CandidateName",
+              ns = ns
+            ) %>%
+            xml2::xml_text()
+        ))
+    )
+
+  # Remove the candidate XML nodesets now that they've been unpacked
+  candidates <-
+    candidates %>%
+    dplyr::select(-candidates_xml)
+
+  # Unnest the data so each row contains data for one candidate
+  candidates <-
+    candidates %>%
+    tidyr::unnest()
+
   # Create a list to store and return all tibbles created from the XML
-  output <- list(contests = contests, pollingplaces = pollingplaces)
+  output <-
+    list(
+      contests = contests,
+      pollingplaces = pollingplaces,
+      candidates = candidates
+    )
 
   output
 }
