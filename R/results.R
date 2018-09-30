@@ -138,7 +138,22 @@ read_results_detailed_preload_house <- function(x) {
           "./eml:ContestIdentifier/eml:ContestName",
           ns = ns
         ) %>%
-        xml2::xml_text()
+        xml2::xml_text(),
+      district_code = contests_xml %>%
+        xml2::xml_find_first("./d1:PollingDistrictIdentifier", ns = ns) %>%
+        xml2::xml_attr("ShortCode"),
+      state = contests_xml %>%
+        xml2::xml_find_first(
+          "./d1:PollingDistrictIdentifier/d1:StateIdentifier",
+          ns = ns
+        ) %>%
+        xml2::xml_attr("Id"),
+      enrolment_current = contests_xml %>%
+        xml2::xml_find_first("./d1:Enrolment", ns = ns) %>%
+        xml2::xml_attr("CloseOfRolls"),
+      enrolment_historic = contests_xml %>%
+        xml2::xml_find_first("./d1:Enrolment", ns = ns) %>%
+        xml2::xml_attr("Historic")
     )
 
   # Create a tibble containing the polling place data
