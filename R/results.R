@@ -209,6 +209,17 @@ read_results_detailed_preload_house <- function(x) {
     pollingplaces %>%
     tidyr::unnest()
 
+  # Convert the polling place data to appropriate types
+  pollingplaces <-
+    pollingplaces %>%
+    readr::type_convert(
+      col_types = readr::cols(
+        contest_id = readr::col_integer(),
+        pollingplace_id = readr::col_integer(),
+        pollingplace_name = readr::col_character()
+      )
+    )
+
   # Create a tibble containing the candidate data
   candidates <-
     tibble::tibble(
