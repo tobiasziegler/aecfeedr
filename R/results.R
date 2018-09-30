@@ -246,7 +246,34 @@ read_results_detailed_preload_house <- function(x) {
               "./eml:CandidateIdentifier/eml:CandidateName",
               ns = ns
             ) %>%
-            xml2::xml_text()
+            xml2::xml_text(),
+          affiliation_id = .x %>%
+            xml2::xml_find_first("./eml:AffiliationIdentifier", ns = ns) %>%
+            xml2::xml_attr("Id"),
+          affiliation_code = .x %>%
+            xml2::xml_find_first("./eml:AffiliationIdentifier", ns = ns) %>%
+            xml2::xml_attr("ShortCode"),
+          affiliation_name = .x %>%
+            xml2::xml_find_first(
+              "./eml:AffiliationIdentifier/eml:RegisteredName",
+              ns = ns
+            ) %>%
+            xml2::xml_text(),
+          ballot_position = .x %>%
+            xml2::xml_find_first("./d1:BallotPosition") %>%
+            xml2::xml_text(),
+          elected_current = .x %>%
+            xml2::xml_find_first("./d1:Elected") %>%
+            xml2::xml_text(),
+          elected_historic = .x %>%
+            xml2::xml_find_first("./d1:Elected") %>%
+            xml2::xml_attr("Historic"),
+          incumbent = .x %>%
+            xml2::xml_find_first("./d1:Incumbent") %>%
+            xml2::xml_text(),
+          incumbent_notional = .x %>%
+            xml2::xml_find_first("./d1:Incumbent") %>%
+            xml2::xml_attr("Notional")
         ))
     )
 
