@@ -156,6 +156,20 @@ read_results_detailed_preload_house <- function(x) {
         xml2::xml_attr("Historic")
     )
 
+  # Convert the contest data to appropriate types
+  contests <-
+    contests %>%
+    readr::type_convert(
+      col_types = readr::cols(
+        contest_id = readr::col_integer(),
+        contest_name = readr::col_character(),
+        district_code = readr::col_character(),
+        state = readr::col_character(),
+        enrolment_current = readr::col_integer(),
+        enrolment_historic = readr::col_integer()
+      )
+    )
+
   # Create a tibble containing the polling place data
   pollingplaces <-
     tibble::tibble(
