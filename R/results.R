@@ -287,6 +287,26 @@ read_results_detailed_preload_house <- function(x) {
     candidates %>%
     tidyr::unnest()
 
+  # Convert the candidate data to appropriate types
+  candidates <-
+    candidates %>%
+    readr::type_convert(
+      col_types = readr::cols(
+        contest_id = readr::col_integer(),
+        candidate_type = readr::col_character(),
+        candidate_id = readr::col_integer(),
+        candidate_name = readr::col_character(),
+        affiliation_id = readr::col_integer(),
+        affiliation_code = readr::col_character(),
+        affiliation_name = readr::col_character(),
+        ballot_position = readr::col_integer(),
+        elected_current = readr::col_logical(),
+        elected_historic = readr::col_logical(),
+        incumbent = readr::col_logical(),
+        incumbent_notional = col_logical()
+      )
+    )
+
   # Create a list to store and return all tibbles created from the XML
   output <-
     list(
