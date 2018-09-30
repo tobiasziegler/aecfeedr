@@ -236,6 +236,8 @@ read_results_detailed_preload_house <- function(x) {
     dplyr::mutate(
       candidates_tbl = candidates_xml %>%
         purrr::map(~ tibble::tibble(
+          candidate_type = .x %>%
+            xml2::xml_name(),
           candidate_id = .x %>%
             xml2::xml_find_first("./eml:CandidateIdentifier", ns = ns) %>%
             xml2::xml_attr("Id"),
