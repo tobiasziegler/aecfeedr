@@ -1,4 +1,4 @@
-#' Read the first preference House results by polling place from an XML message
+#' Read the first preference House votes from an XML results message
 #'
 #' Description goes here
 #'
@@ -6,7 +6,7 @@
 #'
 #' @return A tibble containing the first preference results by polling place
 #' @export
-read_results_house_fp_by_pollingplace <- function(x) {
+read_results_house_fp <- function(x) {
   # Read the XML document
   xml <- xml2::read_xml(x)
 
@@ -20,8 +20,8 @@ read_results_house_fp_by_pollingplace <- function(x) {
     ns = ns
   )
 
-  # Create a tibble by parsing the relevant XML nodes
-  results <- tibble::tibble(
+  # Create a tibble for vote by polling place by parsing the relevant XML nodes
+  results_fp_by_pp <- tibble::tibble(
     contest_id = contests %>%
       xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
       xml2::xml_attr("Id"),
@@ -34,8 +34,8 @@ read_results_house_fp_by_pollingplace <- function(x) {
   )
 
   # Unpack the polling place XML for each contest into tibbles
-  results <-
-    results %>%
+  results_fp_by_pp <-
+    results_fp_by_pp %>%
     dplyr::mutate(
       pollingplaces = pp_xml %>%
         purrr::map(~ tibble::tibble(
@@ -52,18 +52,18 @@ read_results_house_fp_by_pollingplace <- function(x) {
     )
 
   # Remove the polling place XML nodesets now that they've been unpacked
-  results <-
-    results %>%
+  results_fp_by_pp <-
+    results_fp_by_pp %>%
     dplyr::select(-pp_xml)
 
   # Unnest the data so each row contains results for one polling place
-  results <-
-    results %>%
+  results_fp_by_pp <-
+    results_fp_by_pp %>%
     tidyr::unnest()
 
   # Unpack the first preferences XML for each polling place into tibbles
-  results <-
-    results %>%
+  results_fp_by_pp <-
+    results_fp_by_pp %>%
     dplyr::mutate(
       firstpreferences = fp_xml %>%
         purrr::map(~ tibble::tibble(
@@ -79,18 +79,18 @@ read_results_house_fp_by_pollingplace <- function(x) {
     )
 
   # Remove the first preferences XML nodesets now that they've been unpacked
-  results <-
-    results %>%
+  results_fp_by_pp <-
+    results_fp_by_pp %>%
     dplyr::select(-fp_xml)
 
   # Unnest the data so each row contains one first preference count
-  results <-
-    results %>%
+  results_fp_by_pp <-
+    results_fp_by_pp %>%
     tidyr::unnest()
 
   # Convert the data to appropriate types
-  results <-
-    results %>%
+  results_fp_by_pp <-
+    results_fp_by_pp %>%
     readr::type_convert(
       col_types = readr::cols(
         contest_id = readr::col_integer(),
@@ -102,7 +102,7 @@ read_results_house_fp_by_pollingplace <- function(x) {
     )
 
   # Return the tibble containing the results
-  results
+  results_fp_by_pp
 }
 
 #' Read the House information from the Detailed Preload Results XML message
@@ -307,8 +307,8 @@ read_results_detailed_preload_house <- function(x) {
       )
     )
 
-  # Create a tibble containing the historic vote data
-  results_historic <-
+  # Create a tibble containing the historic vote by polling place data
+  results_fp_by_pp_historic <-
     tibble::tibble(
       contest_id = contests_xml %>%
         xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
@@ -322,8 +322,8 @@ read_results_detailed_preload_house <- function(x) {
     )
 
   # Unpack the polling place XML for each contest into tibbles
-  results_historic <-
-    results_historic %>%
+  results_fp_by_pp_historic <-
+    results_fp_by_pp_historic %>%
     dplyr::mutate(
       pollingplaces = pp_xml %>%
         purrr::map(~ tibble::tibble(
@@ -340,18 +340,18 @@ read_results_detailed_preload_house <- function(x) {
     )
 
   # Remove the polling place XML nodesets now that they've been unpacked
-  results_historic <-
-    results_historic %>%
+  results_fp_by_pp_historic <-
+    results_fp_by_pp_historic %>%
     dplyr::select(-pp_xml)
 
   # Unnest the data so each row contains results for one polling place
-  results_historic <-
-    results_historic %>%
+  results_fp_by_pp_historic <-
+    results_fp_by_pp_historic %>%
     tidyr::unnest()
 
   # Unpack the first preferences XML for each polling place into tibbles
-  results_historic <-
-    results_historic %>%
+  results_fp_by_pp_historic <-
+    results_fp_by_pp_historic %>%
     dplyr::mutate(
       firstpreferences = fp_xml %>%
         purrr::map(~ tibble::tibble(
@@ -367,18 +367,18 @@ read_results_detailed_preload_house <- function(x) {
     )
 
   # Remove the first preferences XML nodesets now that they've been unpacked
-  results_historic <-
-    results_historic %>%
+  results_fp_by_pp_historic <-
+    results_fp_by_pp_historic %>%
     dplyr::select(-fp_xml)
 
   # Unnest the data so each row contains one first preference count
-  results_historic <-
-    results_historic %>%
+  results_fp_by_pp_historic <-
+    results_fp_by_pp_historic %>%
     tidyr::unnest()
 
   # Convert the data to appropriate types
-  results_historic <-
-    results_historic %>%
+  results_fp_by_pp_historic <-
+    results_fp_by_pp_historic %>%
     readr::type_convert(
       col_types = readr::cols(
         contest_id = readr::col_integer(),
@@ -395,7 +395,7 @@ read_results_detailed_preload_house <- function(x) {
       contests = contests,
       pollingplaces = pollingplaces,
       candidates = candidates,
-      results_historic = results_historic
+      results_fp_by_pp_historic = results_fp_by_pp_historic
     )
 
   output
