@@ -4,7 +4,7 @@
 #'
 #' @param x A string, connection or raw vector to be processed by `read_xml`
 #'
-#' @return A tibble containing the first preference results by polling place
+#' @return A list of tibbles containing results by polling place and vote type
 #' @export
 read_results_house_fp <- function(x) {
   # Read the XML document
@@ -67,7 +67,7 @@ read_results_house_fp <- function(x) {
     dplyr::mutate(
       firstpreferences = fp_xml %>%
         purrr::map(~ tibble::tibble(
-          vote_type = .x %>%
+          candidate_type = .x %>%
             xml2::xml_name(),
           candidate_id = .x %>%
             xml2::xml_find_first("./eml:CandidateIdentifier", ns = ns) %>%
@@ -95,14 +95,82 @@ read_results_house_fp <- function(x) {
       col_types = readr::cols(
         contest_id = readr::col_integer(),
         pollingplace_id = readr::col_integer(),
-        vote_type = readr::col_character(),
+        candidate_type = readr::col_character(),
         candidate_id = readr::col_integer(),
         votes = readr::col_integer()
       )
     )
 
-  # Return the tibble containing the results
-  results_fp_by_pp
+  # Create a tibble for vote by type by parsing the relevant XML nodes
+  results_fp_by_type <- tibble::tibble(
+    contest_id = contests %>%
+      xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
+      xml2::xml_attr("Id"),
+    candidates_xml = contests %>%
+      purrr::map(~ xml2::xml_find_all(., "./d1:FirstPreferences/*", ns = ns))
+  )
+
+  # Unpack the candidate XML for each contest into tibbles
+  results_fp_by_type <-
+    results_fp_by_type %>%
+    dplyr::mutate(
+      candidates_tbl = candidates_xml %>%
+        purrr::map(~ tibble::tibble(
+          candidate_type = .x %>%
+            xml2::xml_name(),
+          candidate_id = .x %>%
+            xml2::xml_find_first("./eml:CandidateIdentifier", ns = ns) %>%
+            xml2::xml_attr("Id"),
+          fp_xml = .x %>%
+            purrr::map(~ xml2::xml_find_all(
+              .,
+              "./d1:VotesByType/*",
+              ns = ns
+            ))
+        ))
+    )
+
+  # Remove the candidate XML nodesets now that they've been unpacked
+  results_fp_by_type <-
+    results_fp_by_type %>%
+    dplyr::select(-candidates_xml)
+
+  # Unnest the data so each row contains one candidate
+  results_fp_by_type <-
+    results_fp_by_type %>%
+    tidyr::unnest()
+
+  # Unpack the first preferences XML for each candidate into tibbles
+  results_fp_by_type <-
+    results_fp_by_type %>%
+    dplyr::mutate(
+      firstpreferences = fp_xml %>%
+        purrr::map(~ tibble::tibble(
+          vote_type = .x %>%
+            xml2::xml_attr("Type"),
+          votes = .x %>%
+            xml2::xml_text()
+        ))
+    )
+
+  # Remove the first preference XML nodesets now that they've been unpacked
+  results_fp_by_type <-
+    results_fp_by_type %>%
+    dplyr::select(-fp_xml)
+
+  # Unnest the data so each row contains one first preference count
+  results_fp_by_type <-
+    results_fp_by_type %>%
+    tidyr::unnest()
+
+  # Create a list to store and return all tibbles created from the XML
+  output <-
+    list(
+      results_fp_by_pp = results_fp_by_pp,
+      results_fp_by_type = results_fp_by_type
+    )
+
+  output
 }
 
 #' Read the House information from the Detailed Preload Results XML message
