@@ -470,13 +470,90 @@ read_results_detailed_preload_house <- function(x) {
       )
     )
 
+  # Create a tibble containing the historic vote by type data
+  results_fp_by_type_historic <-
+    tibble::tibble(
+      contest_id = contests_xml %>%
+        xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
+        xml2::xml_attr("Id"),
+      candidates_xml = contests_xml %>%
+        purrr::map(~ xml2::xml_find_all(., "./d1:FirstPreferences/*", ns = ns))
+    )
+
+  # Unpack the candidate XML for each contest into tibbles
+  results_fp_by_type_historic <-
+    results_fp_by_type_historic %>%
+    dplyr::mutate(
+      candidates_tbl = candidates_xml %>%
+        purrr::map(~ tibble::tibble(
+          candidate_type = .x %>%
+            xml2::xml_name(),
+          candidate_id = .x %>%
+            xml2::xml_find_first("./eml:CandidateIdentifier", ns = ns) %>%
+            xml2::xml_attr("Id"),
+          fp_xml = .x %>%
+            purrr::map(~ xml2::xml_find_all(
+              .,
+              "./d1:VotesByType/*",
+              ns = ns
+            ))
+        ))
+    )
+
+  # Remove the candidate XML nodesets now that they've been unpacked
+  results_fp_by_type_historic <-
+    results_fp_by_type_historic %>%
+    dplyr::select(-candidates_xml)
+
+  # Unnest the data so each row contains one candidate
+  results_fp_by_type_historic <-
+    results_fp_by_type_historic %>%
+    tidyr::unnest()
+
+  # Unpack the first preferences XML for each candidate into tibbles
+  results_fp_by_type_historic <-
+    results_fp_by_type_historic %>%
+    dplyr::mutate(
+      firstpreferences = fp_xml %>%
+        purrr::map(~ tibble::tibble(
+          vote_type = .x %>%
+            xml2::xml_attr("Type"),
+          votes_historic = .x %>%
+            xml2::xml_attr("Historic")
+        ))
+    )
+
+  # Remove the first preference XML nodesets now that they've been unpacked
+  results_fp_by_type_historic <-
+    results_fp_by_type_historic %>%
+    dplyr::select(-fp_xml)
+
+  # Unnest the data so each row contains one first preference count
+  results_fp_by_type_historic <-
+    results_fp_by_type_historic %>%
+    tidyr::unnest()
+
+  # Convert the data to appropriate types
+  results_fp_by_type_historic <-
+    results_fp_by_type_historic %>%
+    readr::type_convert(
+      col_types = readr::cols(
+        contest_id = readr::col_integer(),
+        candidate_type = readr::col_character(),
+        candidate_id = readr::col_integer(),
+        vote_type = readr::col_character(),
+        votes_historic = readr::col_integer()
+      )
+    )
+
   # Create a list to store and return all tibbles created from the XML
   output <-
     list(
       contests = contests,
       pollingplaces = pollingplaces,
       candidates = candidates,
-      results_fp_by_pp_historic = results_fp_by_pp_historic
+      results_fp_by_pp_historic = results_fp_by_pp_historic,
+      results_fp_by_type_historic = results_fp_by_type_historic
     )
 
   output
