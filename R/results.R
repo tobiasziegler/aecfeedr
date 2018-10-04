@@ -163,6 +163,19 @@ read_results_house_fp <- function(x) {
     results_fp_by_type %>%
     tidyr::unnest()
 
+  # Convert the data to appropriate types
+  results_fp_by_type <-
+    results_fp_by_type %>%
+    readr::type_convert(
+      col_types = readr::cols(
+        contest_id = readr::col_integer(),
+        candidate_type = readr::col_character(),
+        candidate_id = readr::col_integer(),
+        vote_type = readr::col_character(),
+        votes = readr::col_integer()
+      )
+    )
+
   # Create a list to store and return all tibbles created from the XML
   output <-
     list(
