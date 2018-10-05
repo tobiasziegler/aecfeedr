@@ -10,7 +10,7 @@ read_results_house_fp(x)
 \item{x}{A string, connection or raw vector to be processed by \code{read_xml}}
 }
 \value{
-A tibble containing the first preference results by polling place
+A list of tibbles containing results by polling place and vote type
 }
 \description{
 Description goes here
