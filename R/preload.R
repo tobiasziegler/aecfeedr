@@ -6,7 +6,7 @@
 #'
 #' @return A list of tibbles containing static and historical information
 #' @export
-read_results_detailed_preload_house <- function(x) {
+read_preload_house_fp <- function(x) {
   # Read the XML document
   xml <- xml2::read_xml(x)
 
