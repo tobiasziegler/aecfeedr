@@ -1,6 +1,11 @@
-#' Read the House information from the Detailed Preload Results XML message
+#' Read the House information from a Detailed Preload Results XML message
 #'
-#' Description goes here
+#' The AEC's preload data feed provides the details about election contests,
+#' candidates, and polling places, along with the historical (previous
+#' election) results. This function processes the detailed preload message and
+#' produces a set of tibbles that can be used to produce pre-election content
+#' and can be combined with the light version of live results, which only
+#' identifies contests, candidates and polling places by their ID numbers.
 #'
 #' @param x A string, connection or raw vector to be processed by `read_xml`
 #'

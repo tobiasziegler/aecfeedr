@@ -10,8 +10,9 @@ list_files(url)
 \item{url}{A string containing the URL of the directory}
 }
 \value{
-The contents of the directory
+A character vector containing the filenames within the directory
 }
 \description{
-Description goes here
+This helper function connects to the FTP site and returns the list of files
+within the directory.
 }

@@ -1,6 +1,8 @@
 #' Get the URL for an AEC election feed directory
 #'
-#' Description goes here
+#' Specify the parameters of the election feed you would like to access, and
+#' this function will provide the URL for the corresponding FTP site and
+#' directory.
 #'
 #' @param id The unique numeric ID of the electoral event
 #' @param granularity Standard or Detailed granularity
@@ -23,11 +25,12 @@ get_directory_url <- function(id, granularity, verbosity, archived = FALSE) {
 
 #' List all files in an AEC feed directory
 #'
-#' Description goes here
+#' This helper function connects to the FTP site and returns the list of files
+#' within the directory.
 #'
 #' @param url A string containing the URL of the directory
 #'
-#' @return The contents of the directory
+#' @return A character vector containing the filenames within the directory
 #' @export
 list_files <- function(url) {
   # Set up the handle to configure the curl request

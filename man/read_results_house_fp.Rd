@@ -2,7 +2,7 @@
 % Please edit documentation in R/results.R
 \name{read_results_house_fp}
 \alias{read_results_house_fp}
-\title{Read the first preference House votes from an XML results message}
+\title{Read the first preference House votes from a Detailed Light results message}
 \usage{
 read_results_house_fp(x)
 }
@@ -13,5 +13,11 @@ read_results_house_fp(x)
 A list of tibbles containing results by polling place and vote type
 }
 \description{
-Description goes here
+The AEC's Detailed Light results feed provides updates on election results
+with counts at the polling place level. This function processes a message
+from this results feed and produces tibbles that contain the vote counts by
+polling place and vote type. Contest, candidates and polling places in the
+data from this function are only identified by their ID numbers, with full
+details available by combining the data with information from the preload
+feed.
 }

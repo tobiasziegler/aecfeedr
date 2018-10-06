@@ -19,5 +19,7 @@ get_directory_url(id, granularity, verbosity, archived = FALSE)
 A string containing the URL
 }
 \description{
-Description goes here
+Specify the parameters of the election feed you would like to access, and
+this function will provide the URL for the corresponding FTP site and
+directory.
 }
