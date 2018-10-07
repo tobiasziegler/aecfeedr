@@ -201,7 +201,7 @@ read_preload_house_fp <- function(x) {
         elected_current = readr::col_logical(),
         elected_historic = readr::col_logical(),
         incumbent = readr::col_logical(),
-        incumbent_notional = col_logical()
+        incumbent_notional = readr::col_logical()
       )
     )
 
