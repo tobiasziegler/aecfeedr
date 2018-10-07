@@ -23,3 +23,5 @@ Imports:
     tibble,
     tidyr,
     xml2
+Suggests:
+    DBI
