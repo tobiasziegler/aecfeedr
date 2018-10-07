@@ -14,34 +14,34 @@
 #' @export
 read_results_house_fp <- function(x) {
   # Read the XML document
-  xml <- xml2::read_xml(x)
+  xml <- read_xml(x)
 
   # Cache the extracted namespaces for use in XPath searches
-  ns <- xml2::xml_ns(xml)
+  ns <- xml_ns(xml)
 
   # Cache the feed ID for inclusion in data tibbles
   feed_id = xml %>%
-    xml2::xml_find_first("/d1:MediaFeed", ns = ns) %>%
-    xml2::xml_attr("Id")
+    xml_find_first("/d1:MediaFeed", ns = ns) %>%
+    xml_attr("Id")
 
   # Create a one-row tibble with feed details
   feeds <- tibble::tibble(
     feed_id = feed_id,
     feed_created = xml %>%
-      xml2::xml_find_first("/d1:MediaFeed", ns = ns) %>%
-      xml2::xml_attr("Created"),
+      xml_find_first("/d1:MediaFeed", ns = ns) %>%
+      xml_attr("Created"),
     results_granularity = xml %>%
-      xml2::xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
-      xml2::xml_attr("Granularity"),
+      xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
+      xml_attr("Granularity"),
     results_verbosity = xml %>%
-      xml2::xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
-      xml2::xml_attr("Verbosity"),
+      xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
+      xml_attr("Verbosity"),
     results_phase = xml %>%
-      xml2::xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
-      xml2::xml_attr("Phase"),
+      xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
+      xml_attr("Phase"),
     results_updated = xml %>%
-      xml2::xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
-      xml2::xml_attr("Updated")
+      xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
+      xml_attr("Updated")
   )
 
   # Convert the data to appropriate types
@@ -59,7 +59,7 @@ read_results_house_fp <- function(x) {
     )
 
   # Start by finding the nodeset containing each House contest in the document
-  contests <- xml2::xml_find_all(
+  contests <- xml_find_all(
     xml,
     "/d1:MediaFeed/d1:Results/d1:Election/d1:House/d1:Contests/d1:Contest",
     ns = ns
@@ -69,10 +69,10 @@ read_results_house_fp <- function(x) {
   results_fp_by_pp <- tibble::tibble(
     feed_id = feed_id,
     contest_id = contests %>%
-      xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
-      xml2::xml_attr("Id"),
+      xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
+      xml_attr("Id"),
     pp_xml = contests %>%
-      purrr::map(~ xml2::xml_find_all(
+      purrr::map(~ xml_find_all(
         .,
         "./d1:PollingPlaces/d1:PollingPlace",
         ns = ns
@@ -86,10 +86,10 @@ read_results_house_fp <- function(x) {
       pollingplaces = pp_xml %>%
         purrr::map(~ tibble::tibble(
           pollingplace_id = .x %>%
-            xml2::xml_find_first("./d1:PollingPlaceIdentifier", ns = ns) %>%
-            xml2::xml_attr("Id"),
+            xml_find_first("./d1:PollingPlaceIdentifier", ns = ns) %>%
+            xml_attr("Id"),
           fp_xml = .x %>%
-            purrr::map(~ xml2::xml_find_all(
+            purrr::map(~ xml_find_all(
               .,
               "./d1:FirstPreferences/*",
               ns = ns
@@ -114,13 +114,13 @@ read_results_house_fp <- function(x) {
       firstpreferences = fp_xml %>%
         purrr::map(~ tibble::tibble(
           candidate_type = .x %>%
-            xml2::xml_name(),
+            xml_name(),
           candidate_id = .x %>%
-            xml2::xml_find_first("./eml:CandidateIdentifier", ns = ns) %>%
-            xml2::xml_attr("Id"),
+            xml_find_first("./eml:CandidateIdentifier", ns = ns) %>%
+            xml_attr("Id"),
           votes = .x %>%
-            xml2::xml_find_first("./d1:Votes", ns = ns) %>%
-            xml2::xml_text()
+            xml_find_first("./d1:Votes", ns = ns) %>%
+            xml_text()
         ))
     )
 
@@ -152,10 +152,10 @@ read_results_house_fp <- function(x) {
   results_fp_by_type <- tibble::tibble(
     feed_id = feed_id,
     contest_id = contests %>%
-      xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
-      xml2::xml_attr("Id"),
+      xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
+      xml_attr("Id"),
     candidates_xml = contests %>%
-      purrr::map(~ xml2::xml_find_all(., "./d1:FirstPreferences/*", ns = ns))
+      purrr::map(~ xml_find_all(., "./d1:FirstPreferences/*", ns = ns))
   )
 
   # Unpack the candidate XML for each contest into tibbles
@@ -165,12 +165,12 @@ read_results_house_fp <- function(x) {
       candidates_tbl = candidates_xml %>%
         purrr::map(~ tibble::tibble(
           candidate_type = .x %>%
-            xml2::xml_name(),
+            xml_name(),
           candidate_id = .x %>%
-            xml2::xml_find_first("./eml:CandidateIdentifier", ns = ns) %>%
-            xml2::xml_attr("Id"),
+            xml_find_first("./eml:CandidateIdentifier", ns = ns) %>%
+            xml_attr("Id"),
           fp_xml = .x %>%
-            purrr::map(~ xml2::xml_find_all(
+            purrr::map(~ xml_find_all(
               .,
               "./d1:VotesByType/*",
               ns = ns
@@ -195,9 +195,9 @@ read_results_house_fp <- function(x) {
       firstpreferences = fp_xml %>%
         purrr::map(~ tibble::tibble(
           vote_type = .x %>%
-            xml2::xml_attr("Type"),
+            xml_attr("Type"),
           votes = .x %>%
-            xml2::xml_text()
+            xml_text()
         ))
     )
 
