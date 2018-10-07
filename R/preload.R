@@ -18,6 +18,45 @@ read_preload_house_fp <- function(x) {
   # Cache the extracted namespaces for use in XPath searches
   ns <- xml2::xml_ns(xml)
 
+  # Cache the feed ID for inclusion in data tibbles
+  feed_id = xml %>%
+    xml2::xml_find_first("/d1:MediaFeed", ns = ns) %>%
+    xml2::xml_attr("Id")
+
+  # Create a one-row tibble with feed details
+  feeds <- tibble::tibble(
+    feed_id = feed_id,
+    feed_created = xml %>%
+      xml2::xml_find_first("/d1:MediaFeed", ns = ns) %>%
+      xml2::xml_attr("Created"),
+    results_granularity = xml %>%
+      xml2::xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
+      xml2::xml_attr("Granularity"),
+    results_verbosity = xml %>%
+      xml2::xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
+      xml2::xml_attr("Verbosity"),
+    results_phase = xml %>%
+      xml2::xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
+      xml2::xml_attr("Phase"),
+    results_updated = xml %>%
+      xml2::xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
+      xml2::xml_attr("Updated")
+  )
+
+  # Convert the data to appropriate types
+  feeds <-
+    feeds %>%
+    readr::type_convert(
+      col_types = readr::cols(
+        feed_id = readr::col_character(),
+        feed_created = readr::col_datetime(),
+        results_granularity = readr::col_character(),
+        results_verbosity = readr::col_character(),
+        results_updated = readr::col_datetime(),
+        results_phase = readr::col_character()
+      )
+    )
+
   # Start by finding the nodeset containing each House contest in the document
   contests_xml <- xml2::xml_find_all(
     xml,
@@ -28,6 +67,7 @@ read_preload_house_fp <- function(x) {
   # Create a tibble containing the contest (division) data
   contests <-
     tibble::tibble(
+      feed_id = feed_id,
       contest_id = contests_xml %>%
         xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
         xml2::xml_attr("Id"),
@@ -59,6 +99,7 @@ read_preload_house_fp <- function(x) {
     contests %>%
     readr::type_convert(
       col_types = readr::cols(
+        feed_id = readr::col_character(),
         contest_id = readr::col_integer(),
         contest_name = readr::col_character(),
         district_code = readr::col_character(),
@@ -71,6 +112,7 @@ read_preload_house_fp <- function(x) {
   # Create a tibble containing the polling place data
   pollingplaces <-
     tibble::tibble(
+      feed_id = feed_id,
       contest_id = contests_xml %>%
         xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
         xml2::xml_attr("Id"),
@@ -112,6 +154,7 @@ read_preload_house_fp <- function(x) {
     pollingplaces %>%
     readr::type_convert(
       col_types = readr::cols(
+        feed_id = readr::col_character(),
         contest_id = readr::col_integer(),
         pollingplace_id = readr::col_integer(),
         pollingplace_name = readr::col_character()
@@ -121,6 +164,7 @@ read_preload_house_fp <- function(x) {
   # Create a tibble containing the candidate data
   candidates <-
     tibble::tibble(
+      feed_id = feed_id,
       contest_id = contests_xml %>%
         xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
         xml2::xml_attr("Id"),
@@ -190,6 +234,7 @@ read_preload_house_fp <- function(x) {
     candidates %>%
     readr::type_convert(
       col_types = readr::cols(
+        feed_id = readr::col_character(),
         contest_id = readr::col_integer(),
         candidate_type = readr::col_character(),
         candidate_id = readr::col_integer(),
@@ -208,6 +253,7 @@ read_preload_house_fp <- function(x) {
   # Create a tibble containing the historic vote by polling place data
   results_fp_by_pp_historic <-
     tibble::tibble(
+      feed_id = feed_id,
       contest_id = contests_xml %>%
         xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
         xml2::xml_attr("Id"),
@@ -279,6 +325,7 @@ read_preload_house_fp <- function(x) {
     results_fp_by_pp_historic %>%
     readr::type_convert(
       col_types = readr::cols(
+        feed_id = readr::col_character(),
         contest_id = readr::col_integer(),
         pollingplace_id = readr::col_integer(),
         vote_type = readr::col_character(),
@@ -290,6 +337,7 @@ read_preload_house_fp <- function(x) {
   # Create a tibble containing the historic vote by type data
   results_fp_by_type_historic <-
     tibble::tibble(
+      feed_id = feed_id,
       contest_id = contests_xml %>%
         xml2::xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
         xml2::xml_attr("Id"),
@@ -355,6 +403,7 @@ read_preload_house_fp <- function(x) {
     results_fp_by_type_historic %>%
     readr::type_convert(
       col_types = readr::cols(
+        feed_id = readr::col_character(),
         contest_id = readr::col_integer(),
         candidate_type = readr::col_character(),
         candidate_id = readr::col_integer(),
@@ -366,6 +415,7 @@ read_preload_house_fp <- function(x) {
   # Create a list to store and return all tibbles created from the XML
   output <-
     list(
+      feeds = feeds,
       contests = contests,
       pollingplaces = pollingplaces,
       candidates = candidates,
