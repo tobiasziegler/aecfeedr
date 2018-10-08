@@ -11,7 +11,7 @@
 #'
 #' @return A string containing the URL
 #' @export
-get_directory_url <- function(id, granularity, verbosity, archived = FALSE) {
+feed_get_url <- function(id, granularity, verbosity, archived = FALSE) {
   # Live results feeds and archived results are on different FTP sites
   if (archived) {
     base_url <- "ftp://mediafeedarchive.aec.gov.au"
@@ -32,7 +32,7 @@ get_directory_url <- function(id, granularity, verbosity, archived = FALSE) {
 #'
 #' @return A character vector containing the filenames within the directory
 #' @export
-list_files <- function(url) {
+feed_list_files <- function(url) {
   # Set up the handle to configure the curl request
   handle <- curl::new_handle()
   curl::handle_setopt(handle = handle, dirlistonly = TRUE)
