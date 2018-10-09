@@ -45,3 +45,31 @@ feed_list_files <- function(url) {
   # Return the directory listing
   files
 }
+
+#' Download an AEC feed file and extract its contents
+#'
+#' This function connects to the FTP site, downloads a zip file from a feed
+#' directory, and extracts the XML message(s) and metadata contained within.
+#'
+#' @param dir_url A string containing the URL of the directory
+#' @param filename A string containing the name of the zip file to download
+#' @param destpath A string specifying the base path to download and extract
+#'   files in
+#'
+#' @return A character vector of the filepaths extracted to, invisibly
+#' @export
+feed_get_messages <- function(dir_url, filename, destpath) {
+  if (!requireNamespace("tools", quietly = TRUE)) {
+    stop("Package \"tools\" needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  # Download the zip file
+  url <- paste(dir_url, filename, sep = "")
+  zip <- file.path(destpath, filename)
+  curl::curl_download(url, zip)
+
+  # Extract the XML message(s), schemas, etc., contained in the zip file to a
+  # subdirectory labelled with the zip filename (incl. timestamp)
+  unzip_dir = file.path(destpath, tools::file_path_sans_ext(filename))
+  unzip(zip, exdir = unzip_dir)
+}

@@ -24,4 +24,5 @@ Imports:
     tidyr,
     xml2
 Suggests:
-    DBI
+    DBI,
+    tools
