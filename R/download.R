@@ -71,5 +71,5 @@ feed_get_messages <- function(dir_url, filename, destpath) {
   # Extract the XML message(s), schemas, etc., contained in the zip file to a
   # subdirectory labelled with the zip filename (incl. timestamp)
   unzip_dir = file.path(destpath, tools::file_path_sans_ext(filename))
-  unzip(zip, exdir = unzip_dir)
+  utils::unzip(zip, exdir = unzip_dir)
 }
