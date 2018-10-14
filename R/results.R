@@ -20,7 +20,7 @@ read_results_house_fp <- function(x) {
   ns <- xml_ns(xml)
 
   # Cache the feed ID for inclusion in data tibbles
-  feed_id = xml %>%
+  feed_id <- xml %>%
     xml_find_first("/d1:MediaFeed", ns = ns) %>%
     xml_attr("Id")
 

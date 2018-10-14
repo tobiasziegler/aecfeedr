@@ -60,8 +60,10 @@ feed_list_files <- function(url) {
 #' @export
 feed_get_messages <- function(dir_url, filename, destpath) {
   if (!requireNamespace("tools", quietly = TRUE)) {
-    stop("Package \"tools\" needed for this function to work. Please install it.",
-         call. = FALSE)
+    stop(
+      "Package \"tools\" needed for this function to work. Please install it.",
+      call. = FALSE
+    )
   }
   # Download the zip file
   url <- paste(dir_url, filename, sep = "")
@@ -70,6 +72,6 @@ feed_get_messages <- function(dir_url, filename, destpath) {
 
   # Extract the XML message(s), schemas, etc., contained in the zip file to a
   # subdirectory labelled with the zip filename (incl. timestamp)
-  unzip_dir = file.path(destpath, tools::file_path_sans_ext(filename))
+  unzip_dir <- file.path(destpath, tools::file_path_sans_ext(filename))
   utils::unzip(zip, exdir = unzip_dir)
 }
