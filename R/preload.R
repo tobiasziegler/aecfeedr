@@ -129,7 +129,7 @@ read_preload_house_fp <- function(x) {
   pollingplaces <-
     pollingplaces %>%
     dplyr::mutate(
-      pp_tbl = pp_xml %>%
+      pp_tbl = .data$pp_xml %>%
         purrr::map(~ tibble::tibble(
           pollingplace_id = .x %>%
             xml_find_first("./d1:PollingPlaceIdentifier", ns = ns) %>%
@@ -143,7 +143,7 @@ read_preload_house_fp <- function(x) {
   # Remove the polling place XML nodesets now that they've been unpacked
   pollingplaces <-
     pollingplaces %>%
-    dplyr::select(-pp_xml)
+    dplyr::select(-.data$pp_xml)
 
   # Unnest the data so each row contains data for one polling place
   pollingplaces <-
@@ -177,7 +177,7 @@ read_preload_house_fp <- function(x) {
   candidates <-
     candidates %>%
     dplyr::mutate(
-      candidates_tbl = candidates_xml %>%
+      candidates_tbl = .data$candidates_xml %>%
         purrr::map(~ tibble::tibble(
           candidate_type = .x %>%
             xml_name(),
@@ -223,7 +223,7 @@ read_preload_house_fp <- function(x) {
   # Remove the candidate XML nodesets now that they've been unpacked
   candidates <-
     candidates %>%
-    dplyr::select(-candidates_xml)
+    dplyr::select(-.data$candidates_xml)
 
   # Unnest the data so each row contains data for one candidate
   candidates <-
@@ -270,7 +270,7 @@ read_preload_house_fp <- function(x) {
   results_fp_by_pp_historic <-
     results_fp_by_pp_historic %>%
     dplyr::mutate(
-      pollingplaces = pp_xml %>%
+      pollingplaces = .data$pp_xml %>%
         purrr::map(~ tibble::tibble(
           pollingplace_id = .x %>%
             xml_find_first("./d1:PollingPlaceIdentifier", ns = ns) %>%
@@ -287,7 +287,7 @@ read_preload_house_fp <- function(x) {
   # Remove the polling place XML nodesets now that they've been unpacked
   results_fp_by_pp_historic <-
     results_fp_by_pp_historic %>%
-    dplyr::select(-pp_xml)
+    dplyr::select(-.data$pp_xml)
 
   # Unnest the data so each row contains results for one polling place
   results_fp_by_pp_historic <-
@@ -298,7 +298,7 @@ read_preload_house_fp <- function(x) {
   results_fp_by_pp_historic <-
     results_fp_by_pp_historic %>%
     dplyr::mutate(
-      firstpreferences = fp_xml %>%
+      firstpreferences = .data$fp_xml %>%
         purrr::map(~ tibble::tibble(
           vote_type = .x %>%
             xml_name(),
@@ -314,7 +314,7 @@ read_preload_house_fp <- function(x) {
   # Remove the first preferences XML nodesets now that they've been unpacked
   results_fp_by_pp_historic <-
     results_fp_by_pp_historic %>%
-    dplyr::select(-fp_xml)
+    dplyr::select(-.data$fp_xml)
 
   # Unnest the data so each row contains one first preference count
   results_fp_by_pp_historic <-
@@ -350,7 +350,7 @@ read_preload_house_fp <- function(x) {
   results_fp_by_type_historic <-
     results_fp_by_type_historic %>%
     dplyr::mutate(
-      candidates_tbl = candidates_xml %>%
+      candidates_tbl = .data$candidates_xml %>%
         purrr::map(~ tibble::tibble(
           candidate_type = .x %>%
             xml_name(),
@@ -369,7 +369,7 @@ read_preload_house_fp <- function(x) {
   # Remove the candidate XML nodesets now that they've been unpacked
   results_fp_by_type_historic <-
     results_fp_by_type_historic %>%
-    dplyr::select(-candidates_xml)
+    dplyr::select(-.data$candidates_xml)
 
   # Unnest the data so each row contains one candidate
   results_fp_by_type_historic <-
@@ -380,7 +380,7 @@ read_preload_house_fp <- function(x) {
   results_fp_by_type_historic <-
     results_fp_by_type_historic %>%
     dplyr::mutate(
-      firstpreferences = fp_xml %>%
+      firstpreferences = .data$fp_xml %>%
         purrr::map(~ tibble::tibble(
           vote_type = .x %>%
             xml_attr("Type"),
@@ -392,7 +392,7 @@ read_preload_house_fp <- function(x) {
   # Remove the first preference XML nodesets now that they've been unpacked
   results_fp_by_type_historic <-
     results_fp_by_type_historic %>%
-    dplyr::select(-fp_xml)
+    dplyr::select(-.data$fp_xml)
 
   # Unnest the data so each row contains one first preference count
   results_fp_by_type_historic <-

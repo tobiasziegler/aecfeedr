@@ -83,7 +83,7 @@ read_results_house_fp <- function(x) {
   results_fp_by_pp <-
     results_fp_by_pp %>%
     dplyr::mutate(
-      pollingplaces = pp_xml %>%
+      pollingplaces = .data$pp_xml %>%
         purrr::map(~ tibble::tibble(
           pollingplace_id = .x %>%
             xml_find_first("./d1:PollingPlaceIdentifier", ns = ns) %>%
@@ -100,7 +100,7 @@ read_results_house_fp <- function(x) {
   # Remove the polling place XML nodesets now that they've been unpacked
   results_fp_by_pp <-
     results_fp_by_pp %>%
-    dplyr::select(-pp_xml)
+    dplyr::select(-.data$pp_xml)
 
   # Unnest the data so each row contains results for one polling place
   results_fp_by_pp <-
@@ -111,7 +111,7 @@ read_results_house_fp <- function(x) {
   results_fp_by_pp <-
     results_fp_by_pp %>%
     dplyr::mutate(
-      firstpreferences = fp_xml %>%
+      firstpreferences = .data$fp_xml %>%
         purrr::map(~ tibble::tibble(
           candidate_type = .x %>%
             xml_name(),
@@ -127,7 +127,7 @@ read_results_house_fp <- function(x) {
   # Remove the first preferences XML nodesets now that they've been unpacked
   results_fp_by_pp <-
     results_fp_by_pp %>%
-    dplyr::select(-fp_xml)
+    dplyr::select(-.data$fp_xml)
 
   # Unnest the data so each row contains one first preference count
   results_fp_by_pp <-
@@ -162,7 +162,7 @@ read_results_house_fp <- function(x) {
   results_fp_by_type <-
     results_fp_by_type %>%
     dplyr::mutate(
-      candidates_tbl = candidates_xml %>%
+      candidates_tbl = .data$candidates_xml %>%
         purrr::map(~ tibble::tibble(
           candidate_type = .x %>%
             xml_name(),
@@ -181,7 +181,7 @@ read_results_house_fp <- function(x) {
   # Remove the candidate XML nodesets now that they've been unpacked
   results_fp_by_type <-
     results_fp_by_type %>%
-    dplyr::select(-candidates_xml)
+    dplyr::select(-.data$candidates_xml)
 
   # Unnest the data so each row contains one candidate
   results_fp_by_type <-
@@ -192,7 +192,7 @@ read_results_house_fp <- function(x) {
   results_fp_by_type <-
     results_fp_by_type %>%
     dplyr::mutate(
-      firstpreferences = fp_xml %>%
+      firstpreferences = .data$fp_xml %>%
         purrr::map(~ tibble::tibble(
           vote_type = .x %>%
             xml_attr("Type"),
@@ -204,7 +204,7 @@ read_results_house_fp <- function(x) {
   # Remove the first preference XML nodesets now that they've been unpacked
   results_fp_by_type <-
     results_fp_by_type %>%
-    dplyr::select(-fp_xml)
+    dplyr::select(-.data$fp_xml)
 
   # Unnest the data so each row contains one first preference count
   results_fp_by_type <-
