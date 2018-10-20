@@ -88,6 +88,8 @@ read_results_house_fp <- function(x) {
           pollingplace_id = .x %>%
             xml_find_first("./d1:PollingPlaceIdentifier", ns = ns) %>%
             xml_attr("Id"),
+          pollingplace_updated = .x %>%
+            xml_attr("Updated"),
           fp_xml = .x %>%
             purrr::map(~ xml_find_all(
               .,
