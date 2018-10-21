@@ -28,6 +28,4 @@ There are also some helper functions available to construct the URLs for retriev
 
 ## Examples
 
-Some example XML messages are available in the package's `inst/extdata` directory. You can access one of these files from your R script [using `system.file`](http://r-pkgs.had.co.nz/data.html#data-extdata).
-
-The AEC website also provides [an archive of feeds](https://results.aec.gov.au/) from past federal elections and by-elections back to 2007, which you can access for testing or historical analysis.
+The AEC website provides [an archive of feeds](https://results.aec.gov.au/) from past federal elections and by-elections back to 2007, which you can access for testing before using the package during a live election, or for historical analysis.
