@@ -8,10 +8,16 @@ This package is under active early development and testing.
 
 ## Installation
 
-Get the package from GitHub:
+At this stage the package isn't available on CRAN. You can get the latest release version of the package from GitHub:
 
 ``` r
 devtools::install_github("tobiasziegler/aecfeedr")
+```
+
+Or you can get the development version:
+
+``` r
+devtools::install_github("tobiasziegler/aecfeedr", ref = "develop")
 ```
 
 ## Usage
