@@ -1,6 +1,6 @@
 Package: aecfeedr
 Title: Retrieve Australian Federal Election Information and Results
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: person("David", "Mallard",
                email = "correspondence@davidmallard.id.au",
                role = c("aut", "cre"))
