@@ -24,7 +24,7 @@ At the moment the package only has functions to read and process the following f
 
 These two feeds allow you to produce detailed reporting, analysis and projection of the results based on first preference counts at the polling place level.
 
-There are also some helper functions available to construct the URLs for retrieving the messages from the AEC's FTP sites, and to get a listing of files in a given directory.
+There are also some helper functions available to construct the URLs for retrieving the messages from the AEC's FTP sites, to get a listing of files in a given directory, to download and unzip a feed file, and to write processed data to a database.
 
 ## Examples
 
