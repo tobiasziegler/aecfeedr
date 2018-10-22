@@ -1,5 +1,7 @@
 # aecfeedr
 
+[![Build Status](https://travis-ci.org/tobiasziegler/aecfeedr.svg?branch=develop)](https://travis-ci.org/tobiasziegler/aecfeedr)
+
 ## Overview
 
 `aecfeedr` is an R package for accessing and reading information from the Australian Electoral Commission's (AEC) FTP media feeds.
