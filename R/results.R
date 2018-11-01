@@ -1,4 +1,4 @@
-#' Read the first preference House votes from a Detailed Light results message
+#' Read the House votes from a Detailed Light results message
 #'
 #' The AEC's Detailed Light results feed provides updates on election results
 #' with counts at the polling place level. This function processes a message
@@ -12,7 +12,7 @@
 #'
 #' @return A list of tibbles containing results by polling place and vote type
 #' @export
-read_results_house_fp <- function(x) {
+read_results_house <- function(x) {
   # Read the XML document
   xml <- read_xml(x)
 
@@ -227,12 +227,179 @@ read_results_house_fp <- function(x) {
       )
     )
 
+  # Create a tibble for TCP vote by polling place by parsing the relevant
+  # XML nodes
+  results_tcp_by_pp <- tibble::tibble(
+    feed_id = feed_id,
+    contest_id = contests %>%
+      xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
+      xml_attr("Id"),
+    pp_xml = contests %>%
+      purrr::map(~ xml_find_all(
+        .,
+        "./d1:PollingPlaces/d1:PollingPlace",
+        ns = ns
+      ))
+  )
+
+  # Unpack the polling place XML for each contest into tibbles
+  results_tcp_by_pp <-
+    results_tcp_by_pp %>%
+    dplyr::mutate(
+      pollingplaces = .data$pp_xml %>%
+        purrr::map(~ tibble::tibble(
+          pollingplace_id = .x %>%
+            xml_find_first("./d1:PollingPlaceIdentifier", ns = ns) %>%
+            xml_attr("Id"),
+          pollingplace_updated = .x %>%
+            xml_attr("Updated"),
+          tcp_xml = .x %>%
+            purrr::map(~ xml_find_all(
+              .,
+              "./d1:TwoCandidatePreferred/*",
+              ns = ns
+            ))
+        ))
+    )
+
+  # Remove the polling place XML nodesets now that they've been unpacked
+  results_tcp_by_pp <-
+    results_tcp_by_pp %>%
+    dplyr::select(-.data$pp_xml)
+
+  # Unnest the data so each row contains results for one polling place
+  results_tcp_by_pp <-
+    results_tcp_by_pp %>%
+    tidyr::unnest()
+
+  # Unpack the two candidate preferred XML for each polling place into tibbles
+  results_tcp_by_pp <-
+    results_tcp_by_pp %>%
+    dplyr::mutate(
+      twocandidatepreferred = .data$tcp_xml %>%
+        purrr::map(~ tibble::tibble(
+          candidate_type = .x %>%
+            xml_name(),
+          candidate_id = .x %>%
+            xml_find_first("./eml:CandidateIdentifier", ns = ns) %>%
+            xml_attr("Id"),
+          votes = .x %>%
+            xml_find_first("./d1:Votes", ns = ns) %>%
+            xml_text()
+        ))
+    )
+
+  # Remove the two candidate preferred XML nodesets now that they've been
+  # unpacked
+  results_tcp_by_pp <-
+    results_tcp_by_pp %>%
+    dplyr::select(-.data$tcp_xml)
+
+  # Unnest the data so each row contains one two candidate preferred count
+  results_tcp_by_pp <-
+    results_tcp_by_pp %>%
+    tidyr::unnest()
+
+  # Convert the data to appropriate types
+  results_tcp_by_pp <-
+    results_tcp_by_pp %>%
+    readr::type_convert(
+      col_types = readr::cols(
+        feed_id = readr::col_character(),
+        contest_id = readr::col_integer(),
+        pollingplace_id = readr::col_integer(),
+        candidate_type = readr::col_character(),
+        candidate_id = readr::col_integer(),
+        votes = readr::col_integer()
+      )
+    )
+
+  # Create a tibble for TCP vote by type by parsing the relevant XML nodes
+  results_tcp_by_type <- tibble::tibble(
+    feed_id = feed_id,
+    contest_id = contests %>%
+      xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
+      xml_attr("Id"),
+    candidates_xml = contests %>%
+      purrr::map(~ xml_find_all(., "./d1:TwoCandidatePreferred/*", ns = ns))
+  )
+
+  # Unpack the candidate XML for each contest into tibbles
+  results_tcp_by_type <-
+    results_tcp_by_type %>%
+    dplyr::mutate(
+      candidates_tbl = .data$candidates_xml %>%
+        purrr::map(~ tibble::tibble(
+          candidate_type = .x %>%
+            xml_name(),
+          candidate_id = .x %>%
+            xml_find_first("./eml:CandidateIdentifier", ns = ns) %>%
+            xml_attr("Id"),
+          tcp_xml = .x %>%
+            purrr::map(~ xml_find_all(
+              .,
+              "./d1:VotesByType/*",
+              ns = ns
+            ))
+        ))
+    )
+
+  # Remove the candidate XML nodesets now that they've been unpacked
+  results_tcp_by_type <-
+    results_tcp_by_type %>%
+    dplyr::select(-.data$candidates_xml)
+
+  # Unnest the data so each row contains one candidate
+  results_tcp_by_type <-
+    results_tcp_by_type %>%
+    tidyr::unnest()
+
+  # Unpack the two candidate preferred XML for each candidate into tibbles
+  results_tcp_by_type <-
+    results_tcp_by_type %>%
+    dplyr::mutate(
+      twocandidatepreferred = .data$tcp_xml %>%
+        purrr::map(~ tibble::tibble(
+          vote_type = .x %>%
+            xml_attr("Type"),
+          votes = .x %>%
+            xml_text()
+        ))
+    )
+
+  # Remove the two candidate preferred XML nodesets now that they've been
+  # unpacked
+  results_tcp_by_type <-
+    results_tcp_by_type %>%
+    dplyr::select(-.data$tcp_xml)
+
+  # Unnest the data so each row contains one two candidate preferred count
+  results_tcp_by_type <-
+    results_tcp_by_type %>%
+    tidyr::unnest()
+
+  # Convert the data to appropriate types
+  results_tcp_by_type <-
+    results_tcp_by_type %>%
+    readr::type_convert(
+      col_types = readr::cols(
+        feed_id = readr::col_character(),
+        contest_id = readr::col_integer(),
+        candidate_type = readr::col_character(),
+        candidate_id = readr::col_integer(),
+        vote_type = readr::col_character(),
+        votes = readr::col_integer()
+      )
+    )
+
   # Create a list to store and return all tibbles created from the XML
   output <-
     list(
       feeds = feeds,
       results_fp_by_pp = results_fp_by_pp,
-      results_fp_by_type = results_fp_by_type
+      results_fp_by_type = results_fp_by_type,
+      results_tcp_by_pp = results_tcp_by_pp,
+      results_tcp_by_type = results_tcp_by_type
     )
 
   output
