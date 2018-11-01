@@ -66,7 +66,7 @@ read_results_house <- function(x) {
   )
 
   # Create a tibble for vote by polling place by parsing the relevant XML nodes
-  results_fp_by_pp <- tibble::tibble(
+  results_by_pp <- tibble::tibble(
     feed_id = feed_id,
     contest_id = contests %>%
       xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
@@ -79,9 +79,9 @@ read_results_house <- function(x) {
       ))
   )
 
-  # Unpack the polling place XML for each contest into tibbles
+  # Unpack the polling place first preference XML for each contest into tibbles
   results_fp_by_pp <-
-    results_fp_by_pp %>%
+    results_by_pp %>%
     dplyr::mutate(
       pollingplaces = .data$pp_xml %>%
         purrr::map(~ tibble::tibble(
@@ -227,24 +227,10 @@ read_results_house <- function(x) {
       )
     )
 
-  # Create a tibble for TCP vote by polling place by parsing the relevant
-  # XML nodes
-  results_tcp_by_pp <- tibble::tibble(
-    feed_id = feed_id,
-    contest_id = contests %>%
-      xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
-      xml_attr("Id"),
-    pp_xml = contests %>%
-      purrr::map(~ xml_find_all(
-        .,
-        "./d1:PollingPlaces/d1:PollingPlace",
-        ns = ns
-      ))
-  )
-
-  # Unpack the polling place XML for each contest into tibbles
+  # Unpack the polling place two candidate preferred XML for each contest into
+  # tibbles
   results_tcp_by_pp <-
-    results_tcp_by_pp %>%
+    results_by_pp %>%
     dplyr::mutate(
       pollingplaces = .data$pp_xml %>%
         purrr::map(~ tibble::tibble(
