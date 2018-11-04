@@ -157,6 +157,9 @@ read_results_house <- function(x) {
     contest_id = contests %>%
       xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
       xml_attr("Id"),
+    results_updated = contests %>%
+      xml_find_first("./d1:FirstPreferences", ns = ns) %>%
+      xml_attr("Updated"),
     candidates_xml = contests %>%
       purrr::map(~ xml_find_all(., "./d1:FirstPreferences/*", ns = ns))
   )
@@ -221,6 +224,7 @@ read_results_house <- function(x) {
       col_types = readr::cols(
         feed_id = readr::col_character(),
         contest_id = readr::col_integer(),
+        results_updated = readr::col_datetime(),
         candidate_type = readr::col_character(),
         candidate_id = readr::col_integer(),
         vote_type = readr::col_character(),
@@ -308,6 +312,9 @@ read_results_house <- function(x) {
     contest_id = contests %>%
       xml_find_first("./eml:ContestIdentifier", ns = ns) %>%
       xml_attr("Id"),
+    results_updated = contests %>%
+      xml_find_first("./d1:FirstPreferences", ns = ns) %>%
+      xml_attr("Updated"),
     candidates_xml = contests %>%
       purrr::map(~ xml_find_all(., "./d1:TwoCandidatePreferred/*", ns = ns))
   )
@@ -373,6 +380,7 @@ read_results_house <- function(x) {
       col_types = readr::cols(
         feed_id = readr::col_character(),
         contest_id = readr::col_integer(),
+        results_updated = readr::col_datetime(),
         candidate_type = readr::col_character(),
         candidate_id = readr::col_integer(),
         vote_type = readr::col_character(),
