@@ -30,16 +30,16 @@ read_preload_house_fp <- function(x) {
     feed_created = xml %>%
       xml_find_first("/d1:MediaFeed", ns = ns) %>%
       xml_attr("Created"),
-    results_granularity = xml %>%
+    feed_granularity = xml %>%
       xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
       xml_attr("Granularity"),
-    results_verbosity = xml %>%
+    feed_verbosity = xml %>%
       xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
       xml_attr("Verbosity"),
-    results_phase = xml %>%
+    feed_phase = xml %>%
       xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
       xml_attr("Phase"),
-    results_updated = xml %>%
+    feed_updated = xml %>%
       xml_find_first("/d1:MediaFeed/d1:Results", ns = ns) %>%
       xml_attr("Updated")
   )
@@ -51,10 +51,10 @@ read_preload_house_fp <- function(x) {
       col_types = readr::cols(
         feed_id = readr::col_character(),
         feed_created = readr::col_datetime(),
-        results_granularity = readr::col_character(),
-        results_verbosity = readr::col_character(),
-        results_updated = readr::col_datetime(),
-        results_phase = readr::col_character()
+        feed_granularity = readr::col_character(),
+        feed_verbosity = readr::col_character(),
+        feed_updated = readr::col_datetime(),
+        feed_phase = readr::col_character()
       )
     )
 
