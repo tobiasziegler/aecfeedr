@@ -153,7 +153,11 @@ read_results_house <- function(x) {
 
   # Convert zero votes for polling places that haven't returned results to NA
   results_fp_by_pp <-
-    replace_zeroes_with_na(results_fp_by_pp, .data$pollingplace_id)
+    replace_zeroes_with_na(
+      results_fp_by_pp,
+      .data$contest_id,
+      .data$pollingplace_id
+    )
 
   # Create a tibble for vote by type by parsing the relevant XML nodes
   results_fp_by_type <- tibble::tibble(
@@ -320,7 +324,11 @@ read_results_house <- function(x) {
 
   # Convert zero votes for polling places that haven't returned results to NA
   results_tcp_by_pp <-
-    replace_zeroes_with_na(results_tcp_by_pp, .data$pollingplace_id)
+    replace_zeroes_with_na(
+      results_tcp_by_pp,
+      .data$contest_id,
+      .data$pollingplace_id
+    )
 
   # Create a tibble for TCP vote by type by parsing the relevant XML nodes
   results_tcp_by_type <- tibble::tibble(
