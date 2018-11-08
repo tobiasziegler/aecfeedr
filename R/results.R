@@ -153,19 +153,7 @@ read_results_house <- function(x) {
 
   # Convert zero votes for polling places that haven't returned results to NA
   results_fp_by_pp <-
-    results_fp_by_pp %>%
-    dplyr::group_by(.data$pollingplace_id) %>%
-    dplyr::mutate(
-      total_votes = sum(.data$votes),
-      votes = dplyr::if_else(
-        .data$total_votes > 0,
-        .data$votes,
-        NA_integer_,
-        NA_integer_
-      )
-    ) %>%
-    dplyr::select(-.data$total_votes) %>%
-    dplyr::ungroup()
+    replace_zeroes_with_na(results_fp_by_pp, .data$pollingplace_id)
 
   # Create a tibble for vote by type by parsing the relevant XML nodes
   results_fp_by_type <- tibble::tibble(
@@ -415,4 +403,22 @@ read_results_house <- function(x) {
     )
 
   output
+}
+
+replace_zeroes_with_na <- function(x, ...) {
+  grouping <- rlang::quos(...)
+
+  x %>%
+    dplyr::group_by(!!! grouping) %>%
+    dplyr::mutate(
+      total_votes = sum(.data$votes),
+      votes = dplyr::if_else(
+        .data$total_votes > 0,
+        .data$votes,
+        NA_integer_,
+        NA_integer_
+      )
+    ) %>%
+    dplyr::select(-.data$total_votes) %>%
+    dplyr::ungroup()
 }
