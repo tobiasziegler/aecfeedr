@@ -236,6 +236,14 @@ read_results_house <- function(x) {
       )
     )
 
+  # Convert zero votes for vote types that haven't returned any results to NA
+  results_fp_by_type <-
+    replace_zeroes_with_na(
+      results_fp_by_type,
+      .data$contest_id,
+      .data$vote_type
+    )
+
   # Unpack the polling place two candidate preferred XML for each contest into
   # tibbles
   results_tcp_by_pp <-
@@ -394,6 +402,14 @@ read_results_house <- function(x) {
         vote_type = readr::col_character(),
         votes = readr::col_integer()
       )
+    )
+
+  # Convert zero votes for vote types that haven't returned any results to NA
+  results_tcp_by_type <-
+    replace_zeroes_with_na(
+      results_tcp_by_type,
+      .data$contest_id,
+      .data$vote_type
     )
 
   # Create a list to store and return all tibbles created from the XML
