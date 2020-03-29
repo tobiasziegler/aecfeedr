@@ -6,5 +6,6 @@ cache: packages
 
 jobs:
   include:
-  - r: release
   - r: devel
+  - r: release
+  - r: 3.5
