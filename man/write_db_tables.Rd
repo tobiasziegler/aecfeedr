@@ -7,7 +7,7 @@
 write_db_tables(conn, data, ...)
 }
 \arguments{
-\item{conn}{A \code{DBIConnection`` object, as returned by }dbConnect()`}
+\item{conn}{A \verb{DBIConnection`` object, as returned by }dbConnect()`}
 
 \item{data}{A list of tibbles containing data from an AEC feed}
 
