@@ -32,11 +32,9 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
-      - name: Install remotes and renv
+      - name: Install remotes
         run: |
-          install.packages('remotes')
-          install.packages('renv')
-        shell: Rscript {0}
+          Rscript -e "install.packages('remotes')""
 
       - name: Cache renv packages
         uses: actions/cache@v1
