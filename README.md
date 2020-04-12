@@ -1,6 +1,8 @@
 # aecfeedr
 
+<!-- badges: start -->
 [![Build Status](https://travis-ci.org/tobiasziegler/aecfeedr.svg?branch=develop)](https://travis-ci.org/tobiasziegler/aecfeedr)
+<!-- badges: end -->
 
 ## Overview
 
