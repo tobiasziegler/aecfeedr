@@ -24,17 +24,21 @@ jobs:
       RSPM: ${{ matrix.config.rspm }}
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout the repository
+        uses: actions/checkout@v2
 
-      - uses: r-lib/actions/setup-r@master
+      - name: Setup R
+        uses: r-lib/actions/setup-r@master
         with:
           r-version: ${{ matrix.config.r }}
 
-      - uses: r-lib/actions/setup-pandoc@master
+      - name: Setup pandoc
+        uses: r-lib/actions/setup-pandoc@master
 
       # Cache renv packages:
       # https://github.com/actions/cache/blob/master/examples.md#r---renv
-      - uses: actions/cache@v1
+      - name: Cache renv packages (Linux)
+        uses: actions/cache@v1
         if: runner.os == 'Linux'
         with:
           path: ~/.local/share/renv
@@ -42,7 +46,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-renv-
 
-      - uses: actions/cache@v1
+      - name: Cache renv packages (macOS)
+        uses: actions/cache@v1
         if: runner.os == 'macOS'
         with:
           path: ~/Library/Application Support/renv
@@ -50,7 +55,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-renv-
 
-      - uses: actions/cache@v1
+      - name: Cache renv packages (Windows)
+        uses: actions/cache@v1
         if: runner.os == 'Windows'
         with:
           path: ~\AppData\Local\renv
