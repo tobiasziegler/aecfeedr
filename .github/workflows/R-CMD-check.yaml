@@ -34,7 +34,7 @@ jobs:
 
       - name: Install remotes
         run: |
-          Rscript -e "install.packages('remotes')""
+          Rscript -e "install.packages('remotes')"
 
       - name: Cache renv packages
         uses: actions/cache@v1
