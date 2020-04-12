@@ -14,7 +14,9 @@ jobs:
         config:
           - {os: windows-latest, r: '3.6'}
           - {os: macOS-latest, r: '3.6'}
-          - {os: macOS-latest, r: 'devel'}
+          # Enable this check once the fix for this xml2 issue is released:
+          # https://github.com/r-lib/xml2/issues/296
+          # - {os: macOS-latest, r: 'devel'}
           - {os: ubuntu-16.04, r: '3.6', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
 
     env:
