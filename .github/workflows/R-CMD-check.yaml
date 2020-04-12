@@ -32,19 +32,18 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
-      - name: Query dependencies
+      - name: Install remotes and renv
         run: |
           install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          install.packages('renv')
         shell: Rscript {0}
 
-      - name: Cache R packages
-        if: runner.os != 'Windows'
+      - name: Cache renv packages
         uses: actions/cache@v1
         with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-r-${{ matrix.config.r }}-
+          path: $HOME/.local/share/renv
+          key: r-${{ hashFiles('renv.lock') }}
+          restore-keys: r-
 
       - name: Install system dependencies
         if: runner.os == 'Linux'
@@ -54,9 +53,10 @@ jobs:
           Rscript -e "remotes::install_github('r-hub/sysreqs')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
+
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE)
+          R -e 'renv::restore()'
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
