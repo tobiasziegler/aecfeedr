@@ -56,7 +56,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          R -e 'renv::restore()'
+          renv::restore()
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
