@@ -1,7 +1,6 @@
 # aecfeedr
 
 <!-- badges: start -->
-[![Build Status](https://travis-ci.org/tobiasziegler/aecfeedr.svg?branch=develop)](https://travis-ci.org/tobiasziegler/aecfeedr)
 [![R build status](https://github.com/tobiasziegler/aecfeedr/workflows/R-CMD-check/badge.svg)](https://github.com/tobiasziegler/aecfeedr/actions)
 <!-- badges: end -->
 
