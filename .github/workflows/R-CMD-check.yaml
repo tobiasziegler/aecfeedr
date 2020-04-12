@@ -32,16 +32,35 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
+      # Cache renv packages:
+      # https://github.com/actions/cache/blob/master/examples.md#r---renv
+      - uses: actions/cache@v1
+        if: runner.os == 'Linux'
+        with:
+          path: ~/.local/share/renv
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
+
+      - uses: actions/cache@v1
+        if: runner.os == 'macOS'
+        with:
+          path: ~/Library/Application Support/renv
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
+
+      - uses: actions/cache@v1
+        if: runner.os == 'Windows'
+        with:
+          path: ~\AppData\Local\renv
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
+
       - name: Install remotes
         run: |
           Rscript -e "install.packages('remotes')"
-
-      - name: Cache renv packages
-        uses: actions/cache@v1
-        with:
-          path: $HOME/.local/share/renv
-          key: r-${{ hashFiles('renv.lock') }}
-          restore-keys: r-
 
       - name: Install system dependencies
         if: runner.os == 'Linux'
