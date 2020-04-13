@@ -66,21 +66,21 @@ jobs:
 
       - name: Install remotes
         run: |
-          Rscript -e "install.packages('remotes')"
+          Rscript -e "renv::install('remotes')"
 
       - name: Install system dependencies
         if: runner.os == 'Linux'
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
-          Rscript -e "remotes::install_github('r-hub/sysreqs')"
+          Rscript -e "renv::install('r-hub/sysreqs')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
 
       - name: Install dependencies
         run: |
           renv::restore()
-          remotes::install_cran("rcmdcheck")
+          renv::install("rcmdcheck")
         shell: Rscript {0}
 
       - name: Check
