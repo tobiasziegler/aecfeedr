@@ -1,4 +1,8 @@
-# aecfeedr *development version*
+# aecfeedr (development version)
+
+- Updated the minimum required R version to 3.6.
+
+- Switched from Travis CI to GitHub Actions for package checking.
 
 - `read_results_house` replaces `read_results_house_fp` and now processes two candidate preferred vote counts as well as first preferences.
 
