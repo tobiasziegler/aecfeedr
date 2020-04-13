@@ -6,7 +6,7 @@ Authors@R: person("David", "Mallard",
                role = c("aut", "cre"))
 Description: Access and read data from the Australian Electoral Commission's
     FTP media feeds.
-Depends: R (>= 3.5)
+Depends: R (>= 3.6)
 License: MIT + file LICENSE
 URL: https://github.com/tobiasziegler/aecfeedr
 BugReports: https://github.com/tobiasziegler/aecfeedr/issues
