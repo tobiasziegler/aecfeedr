@@ -334,21 +334,3 @@ read_results_house <- function(x) {
 
   output
 }
-
-replace_zeroes_with_na <- function(x, ...) {
-  grouping <- rlang::quos(...)
-
-  x %>%
-    dplyr::group_by(!!! grouping) %>%
-    dplyr::mutate(
-      total_votes = sum(.data$votes),
-      votes = dplyr::if_else(
-        .data$total_votes > 0,
-        .data$votes,
-        NA_integer_,
-        NA_integer_
-      )
-    ) %>%
-    dplyr::select(-.data$total_votes) %>%
-    dplyr::ungroup()
-}
