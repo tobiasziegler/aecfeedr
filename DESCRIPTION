@@ -23,6 +23,7 @@ Imports:
     rlang,
     tibble,
     tidyr,
+    tidyselect,
     xml2
 Suggests:
     DBI,
