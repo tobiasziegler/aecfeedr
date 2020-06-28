@@ -13,7 +13,8 @@
 write_db_tables <- function(conn, data, ...) {
   if (!requireNamespace("DBI", quietly = TRUE)) {
     stop("Package \"DBI\" needed for this function to work. Please install it.",
-         call. = FALSE)
+      call. = FALSE
+    )
   }
 
   purrr::iwalk(
