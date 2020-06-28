@@ -1,5 +1,7 @@
 # aecfeedr (development version)
 
+- Refactored XML processing functions for (somewhat) reduced repetition and improved performance.
+
 - Updated the minimum required R version to 3.6.
 
 - Switched from Travis CI to GitHub Actions for package checking.
