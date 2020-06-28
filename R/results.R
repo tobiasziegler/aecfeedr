@@ -251,20 +251,20 @@ read_results_house <- function(x) {
         )
     )
 
-    tcp_by_pp_formula <-
-      ~ tibble::tibble(
-        candidate_type =
-          xml_name(.x),
-        candidate_id =
-          xml_attr(
-            xml_find_first(.x, "./eml:CandidateIdentifier", ns = ns),
-            "Id"
-          ),
-        votes =
-          xml_text(
-            xml_find_first(.x, "./d1:Votes", ns = ns)
-          )
-      )
+  tcp_by_pp_formula <-
+    ~ tibble::tibble(
+      candidate_type =
+        xml_name(.x),
+      candidate_id =
+        xml_attr(
+          xml_find_first(.x, "./eml:CandidateIdentifier", ns = ns),
+          "Id"
+        ),
+      votes =
+        xml_text(
+          xml_find_first(.x, "./d1:Votes", ns = ns)
+        )
+    )
 
   # Unpack the polling place two candidate preferred XML for each contest into
   # tibbles
