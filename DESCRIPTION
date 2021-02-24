@@ -27,4 +27,6 @@ Imports:
     xml2
 Suggests:
     DBI,
-    tools
+    tools,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
