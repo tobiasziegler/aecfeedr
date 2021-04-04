@@ -34,3 +34,12 @@ test_that("invalid feed granularity/verbosity combinations cause errors", {
     class = "aecfeedr_error"
   )
 })
+
+test_that("feed_list_files gets directory listing", {
+  skip_on_cran()
+  skip_if_offline()
+
+  x <- feed_list_files("ftp://mediafeedarchive.aec.gov.au/25881/Detailed/Preload/")
+  expect_length(x, 2)
+  expect_type(x, "character")
+})
