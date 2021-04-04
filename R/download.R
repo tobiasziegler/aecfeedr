@@ -4,14 +4,40 @@
 #' this function will provide the URL for the corresponding FTP site and
 #' directory.
 #'
+#' See the [AEC Media Feed User Guide](https://www.aec.gov.au/media/mediafeed/)
+#' for details of the contents of each feed type and the available combinations
+#' of granularity and verbosity.
+#'
 #' @param id The unique numeric ID of the electoral event
 #' @param granularity Standard or Detailed granularity
 #' @param verbosity Eml, Light, LightProgress, Preload or Verbose
 #' @param archived FALSE for a live election feed, TRUE for a past election
 #'
+#' @examples
+#' feed_get_url(25881, "Detailed", "Preload", TRUE)
+#' feed_get_url(25881, "Detailed", "Light", TRUE)
+#'
 #' @return A string containing the URL
 #' @export
-feed_get_url <- function(id, granularity, verbosity, archived = FALSE) {
+feed_get_url <- function(id,
+                         granularity = c(
+                           "Detailed",
+                           "Standard"
+                         ),
+                         verbosity = c(
+                           "Light",
+                           "Eml",
+                           "LightProgress",
+                           "Preload",
+                           "Verbose"
+                         ),
+                         archived = FALSE) {
+  granularity <- rlang::arg_match(granularity)
+  verbosity <- rlang::arg_match(verbosity)
+  if ((verbosity == "Eml" && granularity == "Detailed") || (verbosity == "LightProgress" && granularity == "Standard")) {
+    rlang::abort(feed_combo_invalid_msg(granularity, verbosity), class = "aecfeedr_error")
+  }
+
   # Live results feeds and archived results are on different FTP sites
   if (archived) {
     base_url <- "ftp://mediafeedarchive.aec.gov.au"
@@ -21,6 +47,13 @@ feed_get_url <- function(id, granularity, verbosity, archived = FALSE) {
 
   # Join the directory structure to the base URL
   glue::glue("{base_url}/{id}/{granularity}/{verbosity}/")
+}
+
+feed_combo_invalid_msg <- function(verbosity, granularity) {
+  msg <- glue::glue("
+                    The AEC does not provide feeds with `{granularity}` granularity and `{verbosity}` verbosity.
+                    Check the Media Feed User Guide (https://www.aec.gov.au/media/mediafeed/) for available combinations.
+                    ")
 }
 
 #' List all files in an AEC feed directory

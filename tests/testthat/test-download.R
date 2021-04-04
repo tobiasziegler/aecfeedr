@@ -1,14 +1,36 @@
 test_that("feed_get_url provides correct URLs", {
   expect_equal(
-    feed_get_url(24310, "Detailed", "Light", TRUE),
-    glue::as_glue("ftp://mediafeedarchive.aec.gov.au/24310/Detailed/Light/")
+    feed_get_url(25881, "Detailed", "Light", TRUE),
+    glue::as_glue("ftp://mediafeedarchive.aec.gov.au/25881/Detailed/Light/")
   )
   expect_equal(
-    feed_get_url(24310, "Detailed", "Light", FALSE),
-    glue::as_glue("ftp://mediafeed.aec.gov.au/24310/Detailed/Light/")
+    feed_get_url(25881, "Detailed", "Light", FALSE),
+    glue::as_glue("ftp://mediafeed.aec.gov.au/25881/Detailed/Light/")
   )
   expect_equal(
-    feed_get_url(24310, "Detailed", "Light"),
-    glue::as_glue("ftp://mediafeed.aec.gov.au/24310/Detailed/Light/")
+    feed_get_url(25881, "Detailed", "Light"),
+    glue::as_glue("ftp://mediafeed.aec.gov.au/25881/Detailed/Light/")
+  )
+})
+
+test_that("invalid feed arguments cause errors", {
+  expect_error(
+    feed_get_url(25881, "Invalid", "Light"),
+    class = "rlang_error"
+  )
+  expect_error(
+    feed_get_url(25881, "Detailed", "Invalid"),
+    class = "rlang_error"
+  )
+})
+
+test_that("invalid feed granularity/verbosity combinations cause errors", {
+  expect_error(
+    feed_get_url(25881, "Detailed", "Eml"),
+    class = "aecfeedr_error"
+  )
+  expect_error(
+    feed_get_url(25881, "Standard", "LightProgress"),
+    class = "aecfeedr_error"
   )
 })

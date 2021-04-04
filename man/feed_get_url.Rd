@@ -4,7 +4,12 @@
 \alias{feed_get_url}
 \title{Get the URL for an AEC election feed directory}
 \usage{
-feed_get_url(id, granularity, verbosity, archived = FALSE)
+feed_get_url(
+  id,
+  granularity = c("Detailed", "Standard"),
+  verbosity = c("Light", "Eml", "LightProgress", "Preload", "Verbose"),
+  archived = FALSE
+)
 }
 \arguments{
 \item{id}{The unique numeric ID of the electoral event}
@@ -22,4 +27,14 @@ A string containing the URL
 Specify the parameters of the election feed you would like to access, and
 this function will provide the URL for the corresponding FTP site and
 directory.
+}
+\details{
+See the \href{https://www.aec.gov.au/media/mediafeed/}{AEC Media Feed User Guide}
+for details of the contents of each feed type and the available combinations
+of granularity and verbosity.
+}
+\examples{
+feed_get_url(25881, "Detailed", "Preload", TRUE)
+feed_get_url(25881, "Detailed", "Light", TRUE)
+
 }
