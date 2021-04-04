@@ -1,5 +1,7 @@
 # aecfeedr (development version)
 
+- `feed_get_url` uses default values and argument matching to identify invalid granularity and verbosity values.
+
 - Refactored XML processing functions for (somewhat) reduced repetition and improved performance.
 
 - Updated the minimum required R version to 3.6.
