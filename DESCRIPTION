@@ -17,6 +17,7 @@ Roxygen: list(markdown = TRUE)
 Imports:
     curl,
     dplyr,
+    glue,
     magrittr,
     purrr,
     readr,
