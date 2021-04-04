@@ -42,6 +42,7 @@ test_that("feed_list_files gets directory listing", {
   x <- feed_list_files("ftp://mediafeedarchive.aec.gov.au/25881/Detailed/Preload/")
   expect_length(x, 2)
   expect_type(x, "character")
+  expect_snapshot(x)
 })
 
 test_that("feed_get_messages downloads and unzips files", {
