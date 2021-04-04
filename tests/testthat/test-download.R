@@ -43,3 +43,18 @@ test_that("feed_list_files gets directory listing", {
   expect_length(x, 2)
   expect_type(x, "character")
 })
+
+test_that("feed_get_messages downloads and unzips files", {
+  skip_on_cran()
+  skip_if_offline()
+
+  dir <- withr::local_tempdir()
+
+  x <- feed_get_messages("ftp://mediafeedarchive.aec.gov.au/25881/Detailed/Preload/", "aec-mediafeed-Detailed-Preload-25881-20201124131220.zip", dir)
+
+  expect_type(x, "character")
+  expect_length(x, 50)
+
+  files <- list.files(dir)
+  expect_snapshot(files)
+})
