@@ -20,7 +20,7 @@ feed_get_url <- function(id, granularity, verbosity, archived = FALSE) {
   }
 
   # Join the directory structure to the base URL
-  paste(base_url, id, granularity, verbosity, "/", sep = "/")
+  glue::glue("{base_url}/{id}/{granularity}/{verbosity}/")
 }
 
 #' List all files in an AEC feed directory
