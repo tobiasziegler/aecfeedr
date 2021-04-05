@@ -16,7 +16,6 @@
 #' @examples
 #' feed_get_url(25881, "Detailed", "Preload", TRUE)
 #' feed_get_url(25881, "Detailed", "Light", TRUE)
-#'
 #' @return A string containing the URL
 #' @export
 feed_get_url <- function(id,
