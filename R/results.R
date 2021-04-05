@@ -20,36 +20,21 @@ read_results_house <- function(x) {
   ns <- xml_ns(xml)
 
   # Cache the feed ID for inclusion in data tibbles
-  feed_id <- xml_attr(xml_find_first(xml, "/d1:MediaFeed", ns = ns), "Id")
+  feed_id <- xml_find_attr(xml, "/d1:MediaFeed", "Id", ns = ns)
 
   # Create a one-row tibble with feed details
   feeds <- tibble::tibble(
     feed_id = feed_id,
     feed_created =
-      xml_attr(
-        xml_find_first(xml, "/d1:MediaFeed", ns = ns),
-        "Created"
-      ),
+      xml_find_attr(xml, "/d1:MediaFeed", "Created", ns = ns),
     feed_granularity =
-      xml_attr(
-        xml_find_first(xml, "/d1:MediaFeed/d1:Results", ns = ns),
-        "Granularity"
-      ),
+      xml_find_attr(xml, "/d1:MediaFeed/d1:Results", "Granularity", ns = ns),
     feed_verbosity =
-      xml_attr(
-        xml_find_first(xml, "/d1:MediaFeed/d1:Results", ns = ns),
-        "Verbosity"
-      ),
+      xml_find_attr(xml, "/d1:MediaFeed/d1:Results", "Verbosity", ns = ns),
     feed_phase =
-      xml_attr(
-        xml_find_first(xml, "/d1:MediaFeed/d1:Results", ns = ns),
-        "Phase"
-      ),
+      xml_find_attr(xml, "/d1:MediaFeed/d1:Results", "Phase", ns = ns),
     feed_updated =
-      xml_attr(
-        xml_find_first(xml, "/d1:MediaFeed/d1:Results", ns = ns),
-        "Updated"
-      )
+      xml_find_attr(xml, "/d1:MediaFeed/d1:Results", "Updated", ns = ns),
   )
 
   # Convert the data to appropriate types
@@ -77,10 +62,7 @@ read_results_house <- function(x) {
   results_by_pp <- tibble::tibble(
     feed_id = feed_id,
     contest_id =
-      xml_attr(
-        xml_find_first(contests, "./eml:ContestIdentifier", ns = ns),
-        "Id"
-      ),
+      xml_find_attr(contests, "./eml:ContestIdentifier", "Id", ns = ns),
     pp_xml =
       purrr::map(
         contests,
@@ -95,10 +77,7 @@ read_results_house <- function(x) {
   fp_pp_formula <-
     ~ tibble::tibble(
       pollingplace_id =
-        xml_attr(
-          xml_find_first(.x, "./d1:PollingPlaceIdentifier", ns = ns),
-          "Id"
-        ),
+        xml_find_attr(.x, "./d1:PollingPlaceIdentifier", "Id", ns = ns),
       results_updated =
         xml_attr(.x, "Updated"),
       fp_xml =
@@ -117,14 +96,9 @@ read_results_house <- function(x) {
       candidate_type =
         xml_name(.x),
       candidate_id =
-        xml_attr(
-          xml_find_first(.x, "./eml:CandidateIdentifier", ns = ns),
-          "Id"
-        ),
+        xml_find_attr(.x, "./eml:CandidateIdentifier", "Id", ns = ns),
       votes =
-        xml_text(
-          xml_find_first(.x, "./d1:Votes", ns = ns)
-        )
+        xml_find_text(.x, "./d1:Votes", ns = ns)
     )
 
   # Unpack the polling place first preference XML for each contest into tibbles
@@ -160,15 +134,9 @@ read_results_house <- function(x) {
   results_fp_by_type <- tibble::tibble(
     feed_id = feed_id,
     contest_id =
-      xml_attr(
-        xml_find_first(contests, "./eml:ContestIdentifier", ns = ns),
-        "Id"
-      ),
+      xml_find_attr(contests, "./eml:ContestIdentifier", "Id", ns = ns),
     results_updated =
-      xml_attr(
-        xml_find_first(contests, "./d1:FirstPreferences", ns = ns),
-        "Updated"
-      ),
+      xml_find_attr(contests, "./d1:FirstPreferences", "Updated", ns = ns),
     candidates_xml =
       purrr::map(
         contests,
@@ -181,10 +149,7 @@ read_results_house <- function(x) {
       candidate_type =
         xml_name(.x),
       candidate_id =
-        xml_attr(
-          xml_find_first(.x, "./eml:CandidateIdentifier", ns = ns),
-          "Id"
-        ),
+        xml_find_attr(.x, "./eml:CandidateIdentifier", "Id", ns = ns),
       fp_xml =
         purrr::map(
           .x,
@@ -234,10 +199,7 @@ read_results_house <- function(x) {
   tcp_pp_formula <-
     ~ tibble::tibble(
       pollingplace_id =
-        xml_attr(
-          xml_find_first(.x, "./d1:PollingPlaceIdentifier", ns = ns),
-          "Id"
-        ),
+        xml_find_attr(.x, "./d1:PollingPlaceIdentifier", "Id", ns = ns),
       results_updated =
         xml_attr(.x, "Updated"),
       tcp_xml =
@@ -256,14 +218,9 @@ read_results_house <- function(x) {
       candidate_type =
         xml_name(.x),
       candidate_id =
-        xml_attr(
-          xml_find_first(.x, "./eml:CandidateIdentifier", ns = ns),
-          "Id"
-        ),
+        xml_find_attr(.x, "./eml:CandidateIdentifier", "Id", ns = ns),
       votes =
-        xml_text(
-          xml_find_first(.x, "./d1:Votes", ns = ns)
-        )
+        xml_find_text(.x, "./d1:Votes", ns = ns)
     )
 
   # Unpack the polling place two candidate preferred XML for each contest into
@@ -300,15 +257,9 @@ read_results_house <- function(x) {
   results_tcp_by_type <- tibble::tibble(
     feed_id = feed_id,
     contest_id =
-      xml_attr(
-        xml_find_first(contests, "./eml:ContestIdentifier", ns = ns),
-        "Id"
-      ),
+      xml_find_attr(contests, "./eml:ContestIdentifier", "Id", ns = ns),
     results_updated =
-      xml_attr(
-        xml_find_first(contests, "./d1:FirstPreferences", ns = ns),
-        "Updated"
-      ),
+      xml_find_attr(contests, "./d1:FirstPreferences", "Updated", ns = ns),
     candidates_xml =
       purrr::map(
         contests,
@@ -321,10 +272,7 @@ read_results_house <- function(x) {
       candidate_type =
         xml_name(.x),
       candidate_id =
-        xml_attr(
-          xml_find_first(.x, "./eml:CandidateIdentifier", ns = ns),
-          "Id"
-        ),
+        xml_find_attr(.x, "./eml:CandidateIdentifier", "Id", ns = ns),
       tcp_xml =
         purrr::map(
           .x,
