@@ -36,5 +36,4 @@ of granularity and verbosity.
 \examples{
 feed_get_url(25881, "Detailed", "Preload", TRUE)
 feed_get_url(25881, "Detailed", "Light", TRUE)
-
 }

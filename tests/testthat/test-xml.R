@@ -17,3 +17,13 @@ test_that("unpack_xml works", {
 
   expect_snapshot(unpack_xml(df, .data$pp_xml, unpack_formula))
 })
+
+test_that("xml_find_attr works", {
+  x <- read_xml("<a id='foo' />")
+  expect_equal(xml_find_attr(x, "/a", "id"), "foo")
+})
+
+test_that("xml_find_text works", {
+  x <- read_xml("<a>foo</a>")
+  expect_equal(xml_find_text(x, "/a"), "foo")
+})

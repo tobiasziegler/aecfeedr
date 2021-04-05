@@ -1,5 +1,7 @@
 # aecfeedr (development version)
 
+- Added `xml_find_attr` and `xml_find_text` functions that extract attributes or text from the first node matching a specified xpath.
+
 - `feed_get_url` uses default values and argument matching to identify invalid granularity and verbosity values.
 
 - Refactored XML processing functions for (somewhat) reduced repetition and improved performance.
