@@ -1,0 +1,24 @@
+<feed id="101">
+  <contest>
+    <contestname>Contest 1</contestname>
+    <pollingplace>
+      <id>PP1</id>
+      <name>Polling Place 1</name>
+    </pollingplace>
+    <pollingplace>
+      <id>PP2</id>
+      <name>Polling Place 2</name>
+    </pollingplace>
+  </contest>
+  <contest>
+    <contestname>Contest 2</contestname>
+    <pollingplace>
+      <id>PP3</id>
+      <name>Polling Place 3</name>
+    </pollingplace>
+    <pollingplace>
+      <id>PP4</id>
+      <name>Polling Place 4</name>
+    </pollingplace>
+  </contest>
+</feed>
