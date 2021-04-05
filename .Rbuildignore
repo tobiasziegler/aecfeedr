@@ -6,3 +6,4 @@
 ^CONTRIBUTING\.md$
 ^\.github$
 ^data-raw$
+^codecov\.yml$

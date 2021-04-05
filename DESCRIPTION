@@ -27,6 +27,7 @@ Imports:
     tidyselect,
     xml2
 Suggests:
+    covr,
     DBI,
     tools,
     testthat (>= 3.0.0),
