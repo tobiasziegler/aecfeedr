@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![R build status](https://github.com/tobiasziegler/aecfeedr/workflows/R-CMD-check/badge.svg)](https://github.com/tobiasziegler/aecfeedr/actions)
+[![Codecov test coverage](https://codecov.io/gh/tobiasziegler/aecfeedr/branch/develop/graph/badge.svg)](https://codecov.io/gh/tobiasziegler/aecfeedr?branch=develop)
 <!-- badges: end -->
 
 ## Overview
