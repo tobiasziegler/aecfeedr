@@ -62,7 +62,6 @@ xml_find_attr <- function(x, xpath, attr, ns = xml_ns(x)) {
 #'
 #' @param x A document, node or node set
 #' @param xpath A string containing a xpath (1.0) expression
-#' @param trim If `TRUE` will trim leading and trailiing spaces
 #' @param ns Optionally, a named vector giving prefix-url pairs, as produced
 #'   by [xml_ns()]. If provided, all names will be explicitly
 #'   qualified with the ns prefix, i.e. if the element `bar` is defined
@@ -70,6 +69,7 @@ xml_find_attr <- function(x, xpath, attr, ns = xml_ns(x)) {
 #'   similarly for attributes). Default namespaces must be given an explicit
 #'   name. The ns is ignored when using [xml_name<-()] and
 #'   [xml_set_name()].
+#' @param trim If `TRUE` will trim leading and trailiing spaces
 #'
 #' @return A character vector.
 #' @export
@@ -77,7 +77,7 @@ xml_find_attr <- function(x, xpath, attr, ns = xml_ns(x)) {
 #' @examples
 #' x <- xml2::read_xml("<a>foo</a>")
 #' xml_find_text(x, "/a")
-xml_find_text <- function(x, xpath, trim = FALSE, ns = xml_ns(x)) {
+xml_find_text <- function(x, xpath, ns = xml_ns(x), trim = FALSE) {
   xml_text(
     xml_find_first(x, xpath, ns),
     trim

@@ -4,14 +4,12 @@
 \alias{xml_find_text}
 \title{Extract the text from the first node that matches an xpath expression}
 \usage{
-xml_find_text(x, xpath, trim = FALSE, ns = xml_ns(x))
+xml_find_text(x, xpath, ns = xml_ns(x), trim = FALSE)
 }
 \arguments{
 \item{x}{A document, node or node set}
 
 \item{xpath}{A string containing a xpath (1.0) expression}
-
-\item{trim}{If \code{TRUE} will trim leading and trailiing spaces}
 
 \item{ns}{Optionally, a named vector giving prefix-url pairs, as produced
 by \code{\link[=xml_ns]{xml_ns()}}. If provided, all names will be explicitly
@@ -20,6 +18,8 @@ in namespace \code{foo}, it will be called \code{foo:bar}. (And
 similarly for attributes). Default namespaces must be given an explicit
 name. The ns is ignored when using \code{\link[=xml_name<-]{xml_name<-()}} and
 \code{\link[=xml_set_name]{xml_set_name()}}.}
+
+\item{trim}{If \code{TRUE} will trim leading and trailiing spaces}
 }
 \value{
 A character vector.
